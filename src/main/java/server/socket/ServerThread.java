@@ -7,8 +7,6 @@ import server.data.StorageManager;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 
 class ServerThread extends Thread {
     private final IKeyStorage storage;
