@@ -21,7 +21,7 @@ import java.security.KeyStore;
  * limitations under the License.
  */
 public class SSLServer extends Thread {
-    private final String SERVER_KEYSTORE_FILE = "keystore.jks";
+    private final String SERVER_KEYSTORE_FILE = "server.jks";
     private final String SERVER_KEYSTORE_PASSWORD = "kocuniv";
     private final String SERVER_KEY_PASSWORD = "kocuniv";
 

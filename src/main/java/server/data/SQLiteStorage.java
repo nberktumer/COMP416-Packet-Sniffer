@@ -37,7 +37,7 @@ public class SQLiteStorage implements IKeyStorage {
 
     @Override
     public synchronized void setKey(String key, String value) {
-        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO SERVER VALUES (?, ?)")) {
+        try (PreparedStatement statement = connection.prepareStatement("INSERT OR REPLACE INTO SERVER VALUES (?, ?)")) {
             statement.setString(1, key);
             statement.setString(2, value);
             statement.execute();
