@@ -98,7 +98,7 @@ public class Client {
             try {
                 String[] commandArr = command.split(" ");
 
-                switch (commandArr[0]) {
+                switch (commandArr[0].toLowerCase()) {
                     case Constants.GET: {
                         String key = command.substring(command.indexOf(" "));
                         if (key.contains(",")) {
@@ -109,8 +109,10 @@ public class Client {
                         break;
                     }
                     case Constants.SUBMIT: {
-                        String keyValuePair = command.substring(command.indexOf(" "));
-                        if (!keyValuePair.contains(", ") && !keyValuePair.contains(",")) {
+                        String keyValuePair = command.substring(Constants.SUBMIT.length());
+                        String[] keyValueArr = keyValuePair.split(",");
+
+                        if(keyValueArr.length != 2) {
                             System.err.println("SUBMIT command must contain 2 arguments.");
                             continue;
                         }

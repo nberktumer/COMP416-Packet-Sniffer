@@ -35,25 +35,32 @@ class TCPServerThread extends Thread {
             String line;
 
             while ((line = inputStream.readLine()) != null) {
-                String[] commandArr = line.split("\\|");
-                String command = commandArr[0];
+                String[] commandArr = line.split(" ");
+                String command = commandArr[0].toLowerCase();
 
                 switch (command) {
-                    case Constants.GET:
-                        break;
-                    case Constants.SUBMIT: {
-                        String keyValuePair = line.substring(line.indexOf(" "));
-                        String key, value;
-                        if (keyValuePair.contains(", ")) {
-                            key = keyValuePair.substring(0, keyValuePair.indexOf(", "));
-                            value = keyValuePair.substring(keyValuePair.indexOf(", "));
-                        } else if (keyValuePair.contains(",")) {
-                            key = keyValuePair.substring(0, keyValuePair.indexOf(","));
-                            value = keyValuePair.substring(keyValuePair.indexOf(","));
+                    case Constants.GET: {
+                        String key = line.substring(Constants.GET.length()).trim();
+                        if (valueMap.containsKey(key)) {
+                            outputStream.println(valueMap.get(key));
                         } else {
+                            outputStream.println("No stored value for " + key);
+                        }
+                        outputStream.flush();
+                        break;
+                    }
+                    case Constants.SUBMIT: {
+                        String keyValuePair = line.substring(Constants.SUBMIT.length());
+                        String[] keyValueArr = keyValuePair.split(",");
+
+                        if (keyValueArr.length != 2) {
                             System.err.println("SUBMIT command must contain 2 arguments.");
                             continue;
                         }
+
+                        String key = keyValueArr[0].trim();
+                        String value = keyValueArr[1].trim();
+
                         valueMap.put(key, value);
                         outputStream.println(Constants.OK);
                         outputStream.flush();
