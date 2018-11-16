@@ -49,7 +49,7 @@ public class TCPConnection implements IClientConnection {
      * @return the received server answer
      */
     public String send(String message) {
-        String response = new String();
+        String response = "";
         try {
             /*
              * Sends the message to the server via PrintWriter

@@ -17,7 +17,7 @@ public class SSLConnection implements IClientConnection {
     Password to the key store file
      */
     private final String KEY_STORE_PASSWORD = "storepass";
-    private SSLSocketFactory sslSocketFactory;
+
     private SSLSocket socket;
     private BufferedReader inputStream;
     private PrintWriter outputStream;
@@ -41,7 +41,7 @@ public class SSLConnection implements IClientConnection {
      */
     public void connect() {
         try {
-            sslSocketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
+            SSLSocketFactory sslSocketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
             socket = (SSLSocket) sslSocketFactory.createSocket(serverAddress, serverPort);
             socket.startHandshake();
             inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));

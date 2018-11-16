@@ -12,11 +12,10 @@ public class Server {
     private int port = -1;
 
     public Server() {
-        getServerInfo();
-        startServer();
+        readServerInfo();
     }
 
-    private void getServerInfo() {
+    private void readServerInfo() {
         Scanner scanner = new Scanner(System.in);
 
         boolean isValidConnectionType = false;
@@ -53,7 +52,7 @@ public class Server {
         }
     }
 
-    private void startServer() {
+    public void startServer() {
         switch (connectionType) {
             case 1:
                 new SSLServer(port);

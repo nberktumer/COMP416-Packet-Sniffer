@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-class TCPServerThread extends Thread {
+class ServerThread extends Thread {
     private BufferedReader inputStream;
     private PrintWriter outputStream;
     private Socket socket;
@@ -20,7 +20,7 @@ class TCPServerThread extends Thread {
      *
      * @param socket input socket to create a thread on
      */
-    public TCPServerThread(Socket socket) {
+    public ServerThread(Socket socket) {
         this.socket = socket;
     }
 
@@ -37,10 +37,14 @@ class TCPServerThread extends Thread {
             while ((line = inputStream.readLine()) != null) {
                 String[] commandArr = line.split(" ");
                 String command = commandArr[0].toLowerCase();
+                String[] arguments = line.substring(command.length()).trim().split(",");
 
                 switch (command) {
                     case Constants.GET: {
-                        String key = line.substring(Constants.GET.length()).trim();
+                        if (arguments.length != 1) {
+                            System.err.println("GET command must have only 1 argument");
+                        }
+                        String key = arguments[0];
                         if (valueMap.containsKey(key)) {
                             outputStream.println(valueMap.get(key));
                         } else {
@@ -50,16 +54,13 @@ class TCPServerThread extends Thread {
                         break;
                     }
                     case Constants.SUBMIT: {
-                        String keyValuePair = line.substring(Constants.SUBMIT.length());
-                        String[] keyValueArr = keyValuePair.split(",");
-
-                        if (keyValueArr.length != 2) {
+                        if (arguments.length != 2) {
                             System.err.println("SUBMIT command must contain 2 arguments.");
                             continue;
                         }
 
-                        String key = keyValueArr[0].trim();
-                        String value = keyValueArr[1].trim();
+                        String key = arguments[0].trim();
+                        String value = arguments[1].trim();
 
                         valueMap.put(key, value);
                         outputStream.println(Constants.OK);
