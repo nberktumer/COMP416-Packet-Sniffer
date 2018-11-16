@@ -2,6 +2,7 @@ package server.socket;
 
 import javax.net.ssl.*;
 import java.io.FileInputStream;
+import java.net.Socket;
 import java.security.KeyStore;
 
 /**
@@ -20,8 +21,8 @@ public class SSLServer extends Thread {
     private final String SERVER_KEYSTORE_FILE = "keystore.jks";
     private final String SERVER_KEYSTORE_PASSWORD = "storepass";
     private final String SERVER_KEY_PASSWORD = "keypass";
+
     private SSLServerSocket sslServerSocket;
-    private SSLServerSocketFactory sslServerSocketFactory;
 
     public SSLServer(int port) {
         try {
@@ -37,7 +38,7 @@ public class SSLServer extends Thread {
             sc.init(kmf.getKeyManagers(), null, null);
 
             // SSL socket factory which creates SSLSockets
-            sslServerSocketFactory = sc.getServerSocketFactory();
+            SSLServerSocketFactory sslServerSocketFactory = sc.getServerSocketFactory();
             sslServerSocket = (SSLServerSocket) sslServerSocketFactory.createServerSocket(port);
 
             System.out.println("SSL server is up and running on port " + port);
@@ -55,9 +56,9 @@ public class SSLServer extends Thread {
      */
     private void listenAndAccept() {
         try {
-            SSLSocket socket = (SSLSocket) sslServerSocket.accept();
+            Socket socket = sslServerSocket.accept();
             System.out.println("An SSL connection was established with a client on the address of " + socket.getRemoteSocketAddress());
-            SSLServerThread sslServerThread = new SSLServerThread(socket);
+            ServerThread sslServerThread = new ServerThread(socket);
             sslServerThread.start();
         } catch (Exception e) {
             e.printStackTrace();

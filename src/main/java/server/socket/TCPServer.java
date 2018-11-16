@@ -41,8 +41,8 @@ public class TCPServer extends Thread {
 
             System.out.println("A connection was established with a client on the address of " + socket.getRemoteSocketAddress());
 
-            TCPServerThread tcpServerThread = new TCPServerThread(socket);
-            tcpServerThread.start();
+            ServerThread serverThread = new ServerThread(socket);
+            serverThread.start();
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Server Class: Connection establishment error inside listenConnections function");

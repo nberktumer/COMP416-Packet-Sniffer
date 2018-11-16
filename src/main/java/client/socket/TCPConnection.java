@@ -6,10 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class TCPConnection implements IClientConnection {
+public class TCPConnection extends IClientConnection {
     private Socket socket;
-    private BufferedReader inputStream;
-    private PrintWriter outputStream;
 
     private String serverAddress;
     private int serverPort;
@@ -33,8 +31,8 @@ public class TCPConnection implements IClientConnection {
             /*
              * Read and write buffers on the socket
              */
-            inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            outputStream = new PrintWriter(socket.getOutputStream());
+            setInputStream(new BufferedReader(new InputStreamReader(socket.getInputStream())));
+            setOutputStream(new PrintWriter(socket.getOutputStream()));
 
             System.out.println("Successfully connected to " + serverAddress + ":" + serverPort);
         } catch (IOException e) {
@@ -43,37 +41,12 @@ public class TCPConnection implements IClientConnection {
     }
 
     /**
-     * Sends the message String to the server and retrieves the answer
-     *
-     * @param message input message string to the server
-     * @return the received server answer
-     */
-    public String send(String message) {
-        String response = new String();
-        try {
-            /*
-             * Sends the message to the server via PrintWriter
-             */
-            outputStream.println(message);
-            outputStream.flush();
-            /*
-             * Reads a line from the server via Buffer Reader
-             */
-            response = inputStream.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Socket read error while sending a message.");
-        }
-        return response;
-    }
-
-    /**
      * Disconnects the socket and closes the buffers
      */
     public void disconnect() {
         try {
-            inputStream.close();
-            outputStream.close();
+            getInputStream().close();
+            getOutputStream().close();
             socket.close();
 
             System.out.println("TCPConnection closed");
@@ -81,24 +54,6 @@ public class TCPConnection implements IClientConnection {
             e.printStackTrace();
             System.err.println("An error occurred while closing the connection.");
         }
-    }
-
-    /**
-     * Returns the input stream
-     *
-     * @return inputStream
-     */
-    public BufferedReader getInputStream() {
-        return inputStream;
-    }
-
-    /**
-     * Returns the output stream
-     *
-     * @return outputStream
-     */
-    public PrintWriter getOutputStream() {
-        return outputStream;
     }
 
     /**

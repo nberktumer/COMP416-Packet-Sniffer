@@ -26,11 +26,12 @@ public class MainProgram {
             }
         }
 
-        if (type == 1)
-            new Server();
-        else if (type == 2)
-            new Client();
-        else
-            System.err.println("Unexpected application type.");
+        if (type == 1) {
+            Server server = new Server();
+            server.startServer();
+        } else {
+            Client client = new Client();
+            client.run();
+        }
     }
 }

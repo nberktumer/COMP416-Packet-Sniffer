@@ -1,8 +1,8 @@
 package client;
 
+import client.socket.ConnectionFactory;
+import client.socket.ConnectionType;
 import client.socket.IClientConnection;
-import client.socket.SSLConnection;
-import client.socket.TCPConnection;
 import config.Constants;
 
 import java.net.InetAddress;
@@ -13,20 +13,19 @@ import java.util.Scanner;
 public class Client {
     private IClientConnection connection;
 
-    private int connectionType = -1;
+    private ConnectionType connectionType;
     private String ipAddress = "";
     private int port = -1;
 
     public Client() {
-        getMasterInformationFromUser();
+        readConnectionInformationFromUser();
         connectToServer();
-        commandLine();
     }
 
     /**
      * Gets the server ip address and port number from the user using scanner
      */
-    private void getMasterInformationFromUser() {
+    private void readConnectionInformationFromUser() {
         Scanner scanner = new Scanner(System.in);
 
         boolean isValidIpAddress = false;
@@ -36,12 +35,13 @@ public class Client {
         while (!isValidConnectionType) {
             System.out.println("Please enter the connection type [1-SSL, 2-TCP]:");
             try {
-                connectionType = scanner.nextInt();
+                int connectionTypeRaw = scanner.nextInt();
 
-                if (connectionType == 1 || connectionType == 2)
-                    isValidConnectionType = true;
-                else
-                    System.err.println("Invalid connection type. Connection type must be either 1 or 2.");
+                if (connectionTypeRaw != 1 && connectionTypeRaw != 2) {
+                    throw new InputMismatchException();
+                }
+                isValidConnectionType = true;
+                connectionType = connectionTypeRaw == 1 ? ConnectionType.SSL : ConnectionType.TCP;
             } catch (InputMismatchException e) {
                 System.err.println("Invalid connection type. Connection type must be either 1 or 2.");
                 scanner.next();
@@ -65,10 +65,10 @@ public class Client {
             try {
                 port = scanner.nextInt();
 
-                if (port >= 0 && port <= 65535)
-                    isValidPort = true;
-                else
-                    System.err.println("Invalid port number. Port number must be between 0 and 65535.");
+                if (port < 0 || port > 65535) {
+                    throw new InputMismatchException();
+                }
+                isValidPort = true;
             } catch (InputMismatchException e) {
                 System.err.println("Invalid port number. Port number must be between 0 and 65535.");
                 scanner.next();
@@ -77,47 +77,38 @@ public class Client {
     }
 
     private void connectToServer() {
-        switch (connectionType) {
-            case 1:
-                connection = new SSLConnection(ipAddress, port);
-                break;
-            case 2:
-                connection = new TCPConnection(ipAddress, port);
-                break;
-        }
+        connection = ConnectionFactory.getInstance().createConnection(connectionType, ipAddress, port);
         connection.connect();
     }
 
-    private void commandLine() {
+    public void run() {
         Scanner scanner = new Scanner(System.in);
-        String command;
+        String input;
 
         do {
-            command = scanner.nextLine();
+            input = scanner.nextLine();
 
             try {
-                String[] commandArr = command.split(" ");
+                String[] commandArr = input.split(" ");
+                String command = commandArr[0];
+                String[] arguments = input.substring(command.length()).split(",");
 
-                switch (commandArr[0].toLowerCase()) {
+                switch (command.toLowerCase()) {
                     case Constants.GET: {
-                        String key = command.substring(command.indexOf(" "));
-                        if (key.contains(",")) {
+                        if (arguments.length != 1) {
                             System.err.println("GET command can have only 1 argument.");
                             continue;
                         }
-                        System.out.println(connection.send(command));
+                        System.out.println(connection.send(input));
                         break;
                     }
                     case Constants.SUBMIT: {
-                        String keyValuePair = command.substring(Constants.SUBMIT.length());
-                        String[] keyValueArr = keyValuePair.split(",");
-
-                        if (keyValueArr.length != 2) {
+                        if (arguments.length != 2) {
                             System.err.println("SUBMIT command must contain 2 arguments.");
                             continue;
                         }
 
-                        System.out.println(connection.send(command));
+                        System.out.println(connection.send(input));
                         break;
                     }
                     default:
@@ -126,8 +117,7 @@ public class Client {
                 }
             } catch (Exception e) {
                 System.err.println("Invalid command");
-                continue;
             }
-        } while (!command.equals("exit"));
+        } while (!input.equals("exit"));
     }
 }
