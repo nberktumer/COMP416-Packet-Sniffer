@@ -25,6 +25,6 @@ public class StorageManager {
     }
 
     private synchronized IKeyStorage createStorage() {
-        return new HashMapStorage();
+        return new SQLiteStorage();
     }
 }
