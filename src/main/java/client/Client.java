@@ -112,7 +112,7 @@ public class Client {
                         String keyValuePair = command.substring(Constants.SUBMIT.length());
                         String[] keyValueArr = keyValuePair.split(",");
 
-                        if(keyValueArr.length != 2) {
+                        if (keyValueArr.length != 2) {
                             System.err.println("SUBMIT command must contain 2 arguments.");
                             continue;
                         }
