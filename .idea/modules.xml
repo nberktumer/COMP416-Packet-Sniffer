@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/drivesample.iml" filepath="$PROJECT_DIR$/.idea/modules/drivesample.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/drivesample_main.iml" filepath="$PROJECT_DIR$/.idea/modules/drivesample_main.iml" group="drivesample" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/drivesample_test.iml" filepath="$PROJECT_DIR$/.idea/modules/drivesample_test.iml" group="drivesample" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/comp416-project2.iml" filepath="$PROJECT_DIR$/.idea/modules/comp416-project2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/comp416-project2_main.iml" filepath="$PROJECT_DIR$/.idea/modules/comp416-project2_main.iml" group="comp416-project2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/comp416-project2_test.iml" filepath="$PROJECT_DIR$/.idea/modules/comp416-project2_test.iml" group="comp416-project2" />
     </modules>
   </component>
 </project>
