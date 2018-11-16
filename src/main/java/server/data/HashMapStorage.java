@@ -17,32 +17,16 @@ public class HashMapStorage implements IKeyStorage {
         }
     }
 
-    @Override
-    public String getKey(String key) {
-        return this.storage.get(key);
-    }
-
-    @Override
-    public boolean containsKey(String key) {
-        return this.storage.containsKey(key);
-    }
-
-    @Override
-    public void setKey(String key, String value) {
-        this.storage.put(key, value);
-        saveMapToFile(this.storage);
-    }
-
     @SuppressWarnings("unchecked")
     private static synchronized ConcurrentMap<String, String> readMapFromFile() {
         try (FileInputStream inStream = new FileInputStream(FILE_NAME);
              ObjectInputStream objectInputStream = new ObjectInputStream(inStream)) {
 
             Object obj = objectInputStream.readObject();
-            if(!(obj instanceof ConcurrentMap)) {
+            if (!(obj instanceof ConcurrentMap)) {
                 return null;
             }
-            return (ConcurrentMap<String, String>)obj;
+            return (ConcurrentMap<String, String>) obj;
         } catch (IOException ignored) {
 
         } catch (ClassNotFoundException e) {
@@ -60,5 +44,21 @@ public class HashMapStorage implements IKeyStorage {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getKey(String key) {
+        return this.storage.get(key);
+    }
+
+    @Override
+    public boolean containsKey(String key) {
+        return this.storage.containsKey(key);
+    }
+
+    @Override
+    public void setKey(String key, String value) {
+        this.storage.put(key, value);
+        saveMapToFile(this.storage);
     }
 }

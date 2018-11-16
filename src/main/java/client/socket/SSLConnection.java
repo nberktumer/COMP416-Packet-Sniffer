@@ -12,11 +12,11 @@ public class SSLConnection extends IClientConnection {
     /*
     Name of key store file
      */
-    private final String KEY_STORE_NAME = "clientkeystore";
+    private final String KEY_STORE_NAME = "client.jks";
     /*
     Password to the key store file
      */
-    private final String KEY_STORE_PASSWORD = "storepass";
+    private final String KEY_STORE_PASSWORD = "kocuniv";
 
     private SSLSocket socket;
 

@@ -10,9 +10,9 @@ public class StorageManager {
     }
 
     public static StorageManager getInstance() {
-        if(_instance == null) {
+        if (_instance == null) {
             synchronized (StorageManager.class) {
-                if(_instance == null) {
+                if (_instance == null) {
                     _instance = new StorageManager();
                 }
             }
@@ -25,6 +25,6 @@ public class StorageManager {
     }
 
     private synchronized IKeyStorage createStorage() {
-       return new HashMapStorage();
+        return new SQLiteStorage();
     }
 }

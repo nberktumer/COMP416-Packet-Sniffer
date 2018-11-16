@@ -1,6 +1,9 @@
 package server.socket;
 
-import javax.net.ssl.*;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
 import java.io.FileInputStream;
 import java.net.Socket;
 import java.security.KeyStore;
@@ -18,9 +21,9 @@ import java.security.KeyStore;
  * limitations under the License.
  */
 public class SSLServer extends Thread {
-    private final String SERVER_KEYSTORE_FILE = "keystore.jks";
-    private final String SERVER_KEYSTORE_PASSWORD = "storepass";
-    private final String SERVER_KEY_PASSWORD = "keypass";
+    private final String SERVER_KEYSTORE_FILE = "server.jks";
+    private final String SERVER_KEYSTORE_PASSWORD = "kocuniv";
+    private final String SERVER_KEY_PASSWORD = "kocuniv";
 
     private SSLServerSocket sslServerSocket;
 
