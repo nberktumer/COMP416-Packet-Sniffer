@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class SSLConnection implements IClientConnection {
+public class SSLConnection extends IClientConnection {
     /*
     Name of key store file
      */
@@ -19,8 +19,6 @@ public class SSLConnection implements IClientConnection {
     private final String KEY_STORE_PASSWORD = "storepass";
 
     private SSLSocket socket;
-    private BufferedReader inputStream;
-    private PrintWriter outputStream;
 
     private String serverAddress;
     private int serverPort;
@@ -44,8 +42,8 @@ public class SSLConnection implements IClientConnection {
             SSLSocketFactory sslSocketFactory = (SSLSocketFactory) SSLSocketFactory.getDefault();
             socket = (SSLSocket) sslSocketFactory.createSocket(serverAddress, serverPort);
             socket.startHandshake();
-            inputStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            outputStream = new PrintWriter(socket.getOutputStream());
+            setInputStream(new BufferedReader(new InputStreamReader(socket.getInputStream())));
+            setOutputStream(new PrintWriter(socket.getOutputStream()));
             System.out.println("Successfully connected to " + serverAddress + " on port " + serverPort);
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,52 +56,14 @@ public class SSLConnection implements IClientConnection {
      */
     public void disconnect() {
         try {
-            inputStream.close();
-            outputStream.close();
+            getInputStream().close();
+            getOutputStream().close();
             socket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    /**
-     * Sends a message as a string over the secure channel and receives
-     * answer from the server
-     *
-     * @param message input message
-     * @return response from server
-     */
-    public String send(String message) {
-        String response = "";
-        try {
-            outputStream.println(message);
-            outputStream.flush();
-            response = inputStream.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("ConnectionToServer. SendForAnswer. Socket read Error");
-        }
-        return response;
-    }
-
-
-    /**
-     * Returns the input stream
-     *
-     * @return inputStream
-     */
-    public BufferedReader getInputStream() {
-        return inputStream;
-    }
-
-    /**
-     * Returns the output stream
-     *
-     * @return outputStream
-     */
-    public PrintWriter getOutputStream() {
-        return outputStream;
-    }
 
     /**
      * Returns the socket

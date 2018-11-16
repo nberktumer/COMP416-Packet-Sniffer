@@ -2,6 +2,8 @@ package server.socket;
 
 
 import config.Constants;
+import server.data.IKeyStorage;
+import server.data.StorageManager;
 
 import java.io.*;
 import java.net.Socket;
@@ -9,11 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 class ServerThread extends Thread {
+    private final IKeyStorage storage;
     private BufferedReader inputStream;
     private PrintWriter outputStream;
     private Socket socket;
-
-    private Map<String, String> valueMap = new HashMap<>();
 
     /**
      * Creates a server thread on the input socket
@@ -22,6 +23,7 @@ class ServerThread extends Thread {
      */
     public ServerThread(Socket socket) {
         this.socket = socket;
+        this.storage = StorageManager.getInstance().getStorage();
     }
 
     /**
@@ -45,8 +47,8 @@ class ServerThread extends Thread {
                             System.err.println("GET command must have only 1 argument");
                         }
                         String key = arguments[0];
-                        if (valueMap.containsKey(key)) {
-                            outputStream.println(valueMap.get(key));
+                        if (storage.containsKey(key)) {
+                            outputStream.println(storage.getKey(key));
                         } else {
                             outputStream.println("No stored value for " + key);
                         }
@@ -62,7 +64,7 @@ class ServerThread extends Thread {
                         String key = arguments[0].trim();
                         String value = arguments[1].trim();
 
-                        valueMap.put(key, value);
+                        storage.setKey(key, value);
                         outputStream.println(Constants.OK);
                         outputStream.flush();
                         break;
