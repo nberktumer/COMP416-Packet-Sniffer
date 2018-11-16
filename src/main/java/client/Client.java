@@ -1,6 +1,6 @@
 package client;
 
-import client.socket.ClientConnection;
+import client.socket.IClientConnection;
 import client.socket.SSLConnection;
 import client.socket.TCPConnection;
 import config.Constants;
@@ -11,7 +11,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Client {
-    private ClientConnection connection;
+    private IClientConnection connection;
 
     private int connectionType = -1;
     private String ipAddress = "";
@@ -50,7 +50,7 @@ public class Client {
 
         while (!isValidIpAddress) {
             System.out.println("Please enter the ip address:");
-            ipAddress = scanner.nextLine();
+            ipAddress = scanner.next();
 
             try {
                 InetAddress.getByName(ipAddress);
@@ -85,6 +85,7 @@ public class Client {
                 connection = new TCPConnection(ipAddress, port);
                 break;
         }
+        connection.connect();
     }
 
     private void commandLine() {
@@ -96,18 +97,29 @@ public class Client {
 
             try {
                 String[] commandArr = command.split(" ");
-                if(!Constants.COMMANDS.contains(commandArr[0]))
-                    System.err.println("Command " + commandArr[0] + " not found.");
 
                 switch (commandArr[0]) {
-                    case "get":
-                        if(commandArr.length != 2) {
-                            System.err.println("Get command can have only 1 argument.");
+                    case Constants.GET: {
+                        String key = command.substring(command.indexOf(" "));
+                        if (key.contains(",")) {
+                            System.err.println("GET command can have only 1 argument.");
                             continue;
                         }
-                        connection.send(command);
+                        System.out.println(connection.send(command));
                         break;
-                    case "send":
+                    }
+                    case Constants.SUBMIT: {
+                        String keyValuePair = command.substring(command.indexOf(" "));
+                        if (!keyValuePair.contains(", ") && !keyValuePair.contains(",")) {
+                            System.err.println("SUBMIT command must contain 2 arguments.");
+                            continue;
+                        }
+
+                        System.out.println(connection.send(command));
+                        break;
+                    }
+                    default:
+                        System.err.println("Command " + commandArr[0] + " not found.");
                         break;
                 }
             } catch (Exception e) {

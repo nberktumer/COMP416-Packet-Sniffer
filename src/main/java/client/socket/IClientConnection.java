@@ -1,6 +1,6 @@
 package client.socket;
 
-public interface ClientConnection {
+public interface IClientConnection {
     public void connect();
     public void disconnect();
     public String send(String message);

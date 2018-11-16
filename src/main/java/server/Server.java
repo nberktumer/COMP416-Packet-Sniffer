@@ -1,5 +1,8 @@
 package server;
 
+import server.socket.SSLServer;
+import server.socket.TCPServer;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -10,6 +13,7 @@ public class Server {
 
     public Server() {
         getServerInfo();
+        startServer();
     }
 
     private void getServerInfo() {
@@ -46,6 +50,17 @@ public class Server {
                 System.err.println("Invalid port number. Port number must be between 0 and 65535.");
                 scanner.next();
             }
+        }
+    }
+
+    private void startServer() {
+        switch (connectionType) {
+            case 1:
+                new SSLServer(port);
+                break;
+            case 2:
+                new TCPServer(port);
+                break;
         }
     }
 }

@@ -6,7 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class TCPConnection implements ClientConnection {
+public class TCPConnection implements IClientConnection {
     private Socket socket;
     private BufferedReader inputStream;
     private PrintWriter outputStream;
@@ -38,7 +38,6 @@ public class TCPConnection implements ClientConnection {
 
             System.out.println("Successfully connected to " + serverAddress + ":" + serverPort);
         } catch (IOException e) {
-            e.printStackTrace();
             System.err.println("No server has been found on " + serverAddress + ":" + serverPort);
         }
     }

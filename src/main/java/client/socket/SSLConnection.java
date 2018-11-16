@@ -8,7 +8,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class SSLConnection implements ClientConnection {
+public class SSLConnection implements IClientConnection {
     /*
     Name of key store file
      */
