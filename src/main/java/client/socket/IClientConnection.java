@@ -41,6 +41,10 @@ public abstract class IClientConnection {
         return inputStream;
     }
 
+    protected void setInputStream(BufferedReader inputStream) {
+        this.inputStream = inputStream;
+    }
+
     /**
      * Returns the output stream
      *
@@ -48,10 +52,6 @@ public abstract class IClientConnection {
      */
     public PrintWriter getOutputStream() {
         return outputStream;
-    }
-
-    protected void setInputStream(BufferedReader inputStream) {
-        this.inputStream = inputStream;
     }
 
     protected void setOutputStream(PrintWriter outputStream) {
