@@ -76,11 +76,17 @@ public class Client {
         }
     }
 
+    /**
+     * Connects to the specified server
+     */
     private void connectToServer() {
         connection = ConnectionFactory.getInstance().createConnection(connectionType, ipAddress, port);
         connection.connect();
     }
 
+    /**
+     * Starts the command line for the client
+     */
     public void run() {
         Scanner scanner = new Scanner(System.in);
         String input;
@@ -107,9 +113,16 @@ public class Client {
                             System.err.println("SUBMIT command must contain 2 arguments.");
                             continue;
                         }
+                        String key = arguments[0].trim();
+                        String value = arguments[1].trim();
 
-                        System.out.println(connection.send(input));
+                        String response = connection.send(input);
+                        System.out.println(response.length() > 0 ? response : "Successfully submitted " + key + ", " + value + " to server at IP address of " + ipAddress);
                         break;
+                    }
+                    case Constants.EXIT: {
+                        connection.disconnect();
+                        return;
                     }
                     default:
                         System.err.println("Command " + commandArr[0] + " not found.");
@@ -118,6 +131,6 @@ public class Client {
             } catch (Exception e) {
                 System.err.println("Invalid command");
             }
-        } while (!input.equals("exit"));
+        } while (true);
     }
 }

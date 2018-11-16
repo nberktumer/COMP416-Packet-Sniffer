@@ -14,7 +14,7 @@ public class TCPServer extends Thread {
      * receiving an incoming connection creates and starts a ServerThread on the
      * client
      *
-     * @param port
+     * @param port port number to start listening on
      */
     public TCPServer(int port) {
         try {

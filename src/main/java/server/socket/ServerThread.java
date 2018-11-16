@@ -1,6 +1,5 @@
 package server.socket;
 
-
 import config.Constants;
 import server.data.IKeyStorage;
 import server.data.StorageManager;
@@ -35,6 +34,9 @@ class ServerThread extends Thread {
             String line;
 
             while ((line = inputStream.readLine()) != null) {
+                System.out.println("Got: " + line);
+                int receivedAck = Character.getNumericValue(line.charAt(0));
+                line = line.substring(1);
                 String[] commandArr = line.split(" ");
                 String command = commandArr[0].toLowerCase();
                 String[] arguments = line.substring(command.length()).trim().split(",");
@@ -42,20 +44,23 @@ class ServerThread extends Thread {
                 switch (command) {
                     case Constants.GET: {
                         if (arguments.length != 1) {
-                            System.err.println("GET command must have only 1 argument");
+                            outputStream.println(receivedAck + Constants.OK + "GET command must have only 1 argument");
+                            outputStream.flush();
+                            continue;
                         }
                         String key = arguments[0];
                         if (storage.containsKey(key)) {
-                            outputStream.println(storage.getKey(key));
+                            outputStream.println(receivedAck + Constants.OK + storage.getKey(key));
                         } else {
-                            outputStream.println("No stored value for " + key);
+                            outputStream.println(receivedAck + Constants.OK + "No stored value for " + key);
                         }
                         outputStream.flush();
                         break;
                     }
                     case Constants.SUBMIT: {
                         if (arguments.length != 2) {
-                            System.err.println("SUBMIT command must contain 2 arguments.");
+                            outputStream.println(receivedAck + Constants.OK + "SUBMIT command must contain 2 arguments.");
+                            outputStream.flush();
                             continue;
                         }
 
@@ -63,12 +68,12 @@ class ServerThread extends Thread {
                         String value = arguments[1].trim();
 
                         storage.setKey(key, value);
-                        outputStream.println(Constants.OK);
+                        outputStream.println(receivedAck + Constants.OK);
                         outputStream.flush();
                         break;
                     }
                     default:
-                        outputStream.println("Command " + command + " not found!");
+                        outputStream.println(receivedAck + Constants.OK + "Command " + command + " not found!");
                         outputStream.flush();
                         break;
                 }

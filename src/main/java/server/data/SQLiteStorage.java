@@ -11,6 +11,12 @@ public class SQLiteStorage implements IKeyStorage {
         initialize();
     }
 
+    /**
+     * Returns the value from the saved map
+     *
+     * @param key key value to get the value from the map
+     * @return the value according to the given key
+     */
     @Override
     public String getKey(String key) {
         try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM SERVER WHERE id=?")) {
@@ -23,6 +29,12 @@ public class SQLiteStorage implements IKeyStorage {
         }
     }
 
+    /**
+     * Checks whether the key exists
+     *
+     * @param key key value to be checked
+     * @return true if the given key exists
+     */
     @Override
     public boolean containsKey(String key) {
         try (PreparedStatement statement = connection.prepareStatement("SELECT COUNT(*) > 0 AS hasValue FROM SERVER WHERE id=?")) {
@@ -35,6 +47,12 @@ public class SQLiteStorage implements IKeyStorage {
         }
     }
 
+    /**
+     * Saves a new key, value pair to the map. If the key already exists, it overrides the old value.
+     *
+     * @param key   key to be saved
+     * @param value value to be saved
+     */
     @Override
     public synchronized void setKey(String key, String value) {
         try (PreparedStatement statement = connection.prepareStatement("INSERT OR REPLACE INTO SERVER VALUES (?, ?)")) {
@@ -46,6 +64,9 @@ public class SQLiteStorage implements IKeyStorage {
         }
     }
 
+    /**
+     * Initializes the SQLite database connection
+     */
     private synchronized void initialize() {
         try {
             connection = DriverManager.getConnection(JDBC_CONNECTION_STRING);

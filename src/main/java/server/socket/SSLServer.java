@@ -54,8 +54,8 @@ public class SSLServer extends Thread {
 
     }
 
-    /*
-    Listens to the line and starts a connection on receiving a request with the client
+    /**
+     * Listens to the line and starts a connection on receiving a request with the client
      */
     private void listenAndAccept() {
         try {

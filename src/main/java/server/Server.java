@@ -15,6 +15,9 @@ public class Server {
         readServerInfo();
     }
 
+    /**
+     * Gets the required information from the user
+     */
     private void readServerInfo() {
         Scanner scanner = new Scanner(System.in);
 
@@ -52,6 +55,9 @@ public class Server {
         }
     }
 
+    /**
+     * Starts the server according to the connection type
+     */
     public void startServer() {
         switch (connectionType) {
             case 1:

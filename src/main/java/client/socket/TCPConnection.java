@@ -1,5 +1,7 @@
 package client.socket;
 
+import config.Constants;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -22,15 +24,14 @@ public class TCPConnection extends IClientConnection {
     }
 
     /**
-     * Establishes a socket connection to the server that is identified by the
-     * serverAddress and the serverPort
+     * Connects to the specified server by serverAddress and serverPort
      */
     public void connect() {
         try {
             socket = new Socket(serverAddress, serverPort);
-            /*
-             * Read and write buffers on the socket
-             */
+            socket.setSoTimeout(Constants.TIMEOUT);
+
+            // Read and write buffers on the socket
             setInputStream(new BufferedReader(new InputStreamReader(socket.getInputStream())));
             setOutputStream(new PrintWriter(socket.getOutputStream()));
 
@@ -54,14 +55,5 @@ public class TCPConnection extends IClientConnection {
             e.printStackTrace();
             System.err.println("An error occurred while closing the connection.");
         }
-    }
-
-    /**
-     * Returns the socket
-     *
-     * @return socket
-     */
-    public Socket getSocket() {
-        return socket;
     }
 }

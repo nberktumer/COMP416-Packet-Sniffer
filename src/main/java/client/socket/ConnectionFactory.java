@@ -6,6 +6,11 @@ public class ConnectionFactory {
     private ConnectionFactory() {
     }
 
+    /**
+     * Returns the ConnectionFactory instance
+     *
+     * @return ConnectionFactory instance
+     */
     public static ConnectionFactory getInstance() {
         if (_instance == null) {
             synchronized (ConnectionFactory.class) {
@@ -17,6 +22,14 @@ public class ConnectionFactory {
         return _instance;
     }
 
+    /**
+     * Creates an IClientConnection according to the given params
+     *
+     * @param type      Connection type (SSL or TCP)
+     * @param ipAddress IP address
+     * @param port      Port number
+     * @return IClientConnection instance
+     */
     public IClientConnection createConnection(ConnectionType type, String ipAddress, int port) {
         switch (type) {
             case TCP:
